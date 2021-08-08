@@ -9,7 +9,7 @@ import (
 var wireTemplate = `
 func Init{{ .Name }}Api(db *gorm.DB, cache *redis.Pool) api.{{ .Name }} {
 	customLogger := logger.NewCustomLogger("{{ .NameLower }}")
-	{{ .NameLower }}Data := data.New{{ .Name }}(db, cache, conf, customLogger)
+	{{ .NameLower }}Data := data.New{{ .Name }}(db, cache, customLogger)
 	{{ .NameLower }}Service := service.New{{ .Name }}({{ .NameLower }}Data, customLogger)
 	{{ .NameLower }}Api := api.New{{ .Name }}({{ .NameLower }}Service, customLogger)
 	return {{ .NameLower }}Api
