@@ -9,10 +9,10 @@ import (
 var wireTemplate = `
 func Init{{ .Name }}Api(db *gorm.DB, cache *redis.Pool) api.{{ .Name }} {
 	customLogger := logger.NewCustomLogger("{{ .NameLower }}")
-	i{{ .Name }}Service := data.New{{ .Name }}(db, cache, customLogger)
-	apiI{{ .Name }}Service := service.New{{ .Name }}(i{{ .Name }}Service, customLogger)
-	{{ .NameLower }} := api.New{{ .Name }}(apiI{{ .Name }}Service, customLogger)
-	return {{ .NameLower }}
+	{{ .NameLower }}Data := data.New{{ .Name }}(db, cache, conf, customLogger)
+	{{ .NameLower }}Service := service.New{{ .Name }}({{ .NameLower }}Data, customLogger)
+	{{ .NameLower }}Api := api.New{{ .Name }}({{ .NameLower }}Service, customLogger)
+	return {{ .NameLower }}Api
 }
 `
 
