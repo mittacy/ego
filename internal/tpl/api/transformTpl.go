@@ -55,8 +55,7 @@ func (ctl *{{ .Name }}) {{ .Name }}sPack(data []model.{{ .Name }}) (reply []{{ .
 func (ctl *{{ .Name }}) GetReply(c *gin.Context, data *model.{{ .Name }}) {
 	reply, err := ctl.{{ .Name }}Pack(data)
 	if err != nil {
-		ctl.logger.CopierErrLog(err)
-		response.Unknown(c)
+		response.CopierErrAndLog(c, ctl.logger, err)
 		return
 	}
 
@@ -73,8 +72,7 @@ func (ctl *{{ .Name }}) GetReply(c *gin.Context, data *model.{{ .Name }}) {
 func (ctl *{{ .Name }}) ListReply(c *gin.Context, data []model.{{ .Name }}, totalSize int64) {
 	list, err := ctl.{{ .Name }}sPack(data)
 	if err != nil {
-		ctl.logger.CopierErrLog(err)
-		response.Unknown(c)
+		response.CopierErrAndLog(c, ctl.logger, err)
 		return
 	}
 
