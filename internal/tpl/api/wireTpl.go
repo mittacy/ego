@@ -8,20 +8,24 @@ import (
 
 var wireTemplate = `
 func Init{{ .Name }}Api(db *gorm.DB, cache *redis.Pool) api.{{ .Name }} {
-	wire.Build(data.New{{ .Name }}, service.New{{ .Name }}, api.New{{ .Name }})
-	return api.{{ .Name }}{}
+	customLogger := logger.NewCustomLogger("{{ .NameLower }}")
+	i{{ .Name }}Service := data.New{{ .Name }}(db, cache, customLogger)
+	apiI{{ .Name }}Service := service.New{{ .Name }}(i{{ .Name }}Service, customLogger)
+	{{ .NameLower }} := api.New{{ .Name }}(apiI{{ .Name }}Service, customLogger)
+	return {{ .NameLower }}
 }
 `
 
 type wire struct {
-	AppName string
-	Name    string
+	AppName   string
+	Name      string
+	NameLower string
 }
 
 func NewWire(appName, name string) wire {
 	w := wire{
 		AppName: appName,
-		Name: name,
+		Name:    name,
 	}
 
 	w.Name = strings.Title(strings.ToLower(w.Name))
@@ -29,6 +33,9 @@ func NewWire(appName, name string) wire {
 }
 
 func (s *wire) execute() ([]byte, error) {
+	s.NameLower = strings.ToLower(s.Name)
+	s.Name = strings.Title(s.NameLower)
+
 	buf := new(bytes.Buffer)
 
 	tmpl, err := template.New("wire").Parse(wireTemplate)

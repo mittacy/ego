@@ -8,21 +8,30 @@ import (
 
 var transformTemplate = `
 {{- /* delete empty line */ -}}
-package {{ .NameLower }}Transform
+package transform
 
 import (
 	"{{ .AppName }}/app/model"
 	"{{ .AppName }}/app/validator/{{ .NameLower }}Validator"
+	"{{ .AppName }}/pkg/logger"
 	"{{ .AppName }}/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 )
 
+type {{ .Name }} struct {
+	logger *logger.CustomLogger
+}
+
+func New{{ .Name }}(customLogger *logger.CustomLogger) {{ .Name }} {
+	return {{ .Name }}{logger: customLogger}
+}
+
 // {{ .Name }}Pack 数据库数据转化为响应数据
 // @param data 数据库数据
 // @return reply 响应体数据
 // @return err
-func {{ .Name }}Pack(data *model.{{ .Name }}) (*{{ .NameLower }}Validator.GetReply, error) {
+func (ctl *{{ .Name }}) {{ .Name }}Pack(data *model.{{ .Name }}) (*{{ .NameLower }}Validator.GetReply, error) {
 	reply := {{ .NameLower }}Validator.GetReply{}
 
 	if err := copier.Copy(&reply, data); err != nil {
@@ -36,17 +45,18 @@ func {{ .Name }}Pack(data *model.{{ .Name }}) (*{{ .NameLower }}Validator.GetRep
 // @param data 数据库数据
 // @return reply 响应体数据
 // @return err
-func {{ .Name }}sPack(data []model.{{ .Name }}) (reply []{{ .NameLower }}Validator.ListReply, err error) {
+func (ctl *{{ .Name }}) {{ .Name }}sPack(data []model.{{ .Name }}) (reply []{{ .NameLower }}Validator.ListReply, err error) {
 	err = copier.Copy(&reply, &data)
 	return
 }
 
-// {{ .Name }}ToReply 详情响应包装
+// GetReply 详情响应包装
 // @param data 数据库数据
-func {{ .Name }}ToReply(c *gin.Context, data *model.{{ .Name }}) {
-	reply, err := {{ .Name }}Pack(data)
+func (ctl *{{ .Name }}) GetReply(c *gin.Context, data *model.{{ .Name }}) {
+	reply, err := ctl.{{ .Name }}Pack(data)
 	if err != nil {
-		response.CopierErrAndLog(c, err)
+		ctl.logger.CopierErrLog(err)
+		response.Unknown(c)
 		return
 	}
 
@@ -57,13 +67,14 @@ func {{ .Name }}ToReply(c *gin.Context, data *model.{{ .Name }}) {
 	response.Success(c, res)
 }
 
-// {{ .Name }}sToReply 列表响应包装
+// ListReply 列表响应包装
 // @param data 数据库列表数据
-// @param totalSize 记录总数
-func {{ .Name }}sToReply(c *gin.Context, data []model.{{ .Name }}, totalSize int64) {
-	list, err := {{ .Name }}sPack(data)
+// @param totalSize 记录总数(ctl *{{ .Name }}) 
+func (ctl *{{ .Name }}) ListReply(c *gin.Context, data []model.{{ .Name }}, totalSize int64) {
+	list, err := ctl.{{ .Name }}sPack(data)
 	if err != nil {
-		response.CopierErrAndLog(c, err)
+		ctl.logger.CopierErrLog(err)
+		response.Unknown(c)
 		return
 	}
 
@@ -74,7 +85,6 @@ func {{ .Name }}sToReply(c *gin.Context, data []model.{{ .Name }}, totalSize int
 
 	response.Success(c, res)
 }
-
 
 `
 

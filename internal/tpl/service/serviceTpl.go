@@ -12,16 +12,21 @@ package service
 
 import (
 	"{{ .AppName }}/app/api"
+	"{{ .AppName }}/pkg/logger"
 )
 
 type {{ .Name }} struct {
 	{{ .NameLower }}Data I{{ .Name }}Data
+	logger *logger.CustomLogger
 }
 
 // 编写实现api层中的各个service接口的构建方法
 
-func New{{ .Name }}({{ .NameLower }}Data I{{ .Name }}Data) api.I{{ .Name }}Service {
-	return &{{ .Name }}{ {{ .NameLower }}Data: {{ .NameLower }}Data }
+func New{{ .Name }}({{ .NameLower }}Data I{{ .Name }}Data, logger *logger.CustomLogger) api.I{{ .Name }}Service {
+	return &{{ .Name }}{
+		{{ .NameLower }}Data: {{ .NameLower }}Data,
+		logger: logger,
+	}
 }
 
 type I{{ .Name }}Data interface {

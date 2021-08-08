@@ -55,7 +55,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddTransform(modName, name)
 
-	AddApi(name)
+	AddApi(modName, name)
 
 	service.AddService(modName, name)
 
@@ -66,9 +66,9 @@ func run(cmd *cobra.Command, args []string) {
 	fmt.Println("success!")
 }
 
-func AddApi(name string) bool {
+func AddApi(appName, name string) bool {
 	to := fmt.Sprintf("%s/api/%s.go", targetDir, name)
-	api := Api{Name: name}
+	api := Api{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, "%s api already exists: %s\n", name, to)
@@ -120,20 +120,9 @@ func AddValidator(name string) bool {
 }
 
 func AddTransform(appName, name string) bool {
-	dir := fmt.Sprintf("%s/transform/%sTransform", targetDir, name)
+	to := fmt.Sprintf("%s/transform/%s.go", targetDir, name)
 	transform := Transform{AppName: appName, Name: name}
 
-	// 检查目录
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		// 创建目录
-		if err := os.Mkdir(dir, 0711); err != nil {
-			fmt.Fprintf(os.Stderr, "create %s transform directory err: %s\n", name, dir)
-			return false
-		}
-	}
-
-	// 检查文件
-	to := fmt.Sprintf("%s/%s.go", dir, name)
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, "%s transform already exists: %s\n", name, to)
 		return false
@@ -161,7 +150,7 @@ func AddWire(appName, name string) bool {
 		return false
 	}
 
-	wirePath := fmt.Sprintf("%s/wire.go", dir)
+	wirePath := fmt.Sprintf("%s/custom_wire.go", dir)
 	wire := NewWire(appName, name)
 
 	// 检查是否已经包含函数
