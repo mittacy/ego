@@ -150,7 +150,7 @@ func AddWire(appName, name string) bool {
 		return false
 	}
 
-	wirePath := fmt.Sprintf("%s/custom_wire.go", dir)
+	wirePath := fmt.Sprintf("%s/api.go", dir)
 	wire := NewWire(appName, name)
 
 	// 检查是否已经包含函数
@@ -165,7 +165,7 @@ func AddWire(appName, name string) bool {
 		return false
 	}
 
-	// 打开 wire.go 文件
+	// 打开 api.go 文件
 	file, err := os.OpenFile(wirePath, os.O_WRONLY|os.O_APPEND, 0600)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s no exists\n", dir)
@@ -182,6 +182,11 @@ func AddWire(appName, name string) bool {
 	if _, err = file.Write(b); err != nil {
 		fmt.Printf("create function Init%sApi err: %v\n", wire.Name, err)
 	}
+
+	// 声明api
+
+
+	// 初始化api
 
 	fmt.Printf("create function Init%sApi in %s\n", wire.Name, wirePath)
 	return true

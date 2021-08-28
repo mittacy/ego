@@ -11,9 +11,16 @@ func Init{{ .Name }}Api(db *gorm.DB, cache *redis.Pool) api.{{ .Name }} {
 	customLogger := logger.NewCustomLogger("{{ .NameLower }}")
 	{{ .NameLower }}Data := data.New{{ .Name }}(db, cache, customLogger)
 	{{ .NameLower }}Service := service.New{{ .Name }}({{ .NameLower }}Data, customLogger)
-	{{ .NameLower }}Api := api.New{{ .Name }}({{ .NameLower }}Service, customLogger)
-	return {{ .NameLower }}Api
+	return api.New{{ .Name }}({{ .NameLower }}Service, customLogger)
 }
+`
+
+var wireVarTemplate = `
+  {{ .NameLower }}Api api.{{ .Name }}
+`
+
+var wireVarInitTemplate = `
+  {{ .NameLower }}Api = Init{{ .Name }}Api(db.ConnectGorm("MYSQLKEY"), cache.ConnRedis("REDISKEY"))
 `
 
 type wire struct {
@@ -39,6 +46,40 @@ func (s *wire) execute() ([]byte, error) {
 	buf := new(bytes.Buffer)
 
 	tmpl, err := template.New("wire").Parse(wireTemplate)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tmpl.Execute(buf, s); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func (s *wire) executeVar() ([]byte, error) {
+	s.NameLower = strings.ToLower(s.Name)
+	s.Name = strings.Title(s.NameLower)
+
+	buf := new(bytes.Buffer)
+
+	tmpl, err := template.New("wire").Parse(wireVarTemplate)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tmpl.Execute(buf, s); err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+}
+
+func (s *wire) executeVarInit() ([]byte, error) {
+	s.NameLower = strings.ToLower(s.Name)
+	s.Name = strings.Title(s.NameLower)
+
+	buf := new(bytes.Buffer)
+
+	tmpl, err := template.New("wire").Parse(wireVarInitTemplate)
 	if err != nil {
 		return nil, err
 	}

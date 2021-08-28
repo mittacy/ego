@@ -11,27 +11,24 @@ var apiTemplate = `
 package api
 
 import (
+	"{{ .AppName }}/app/service"
 	"{{ .AppName }}/app/transform"
 	"{{ .AppName }}/pkg/logger"
 	"github.com/gin-gonic/gin"
 )
 
 type {{ .Name }} struct {
-	{{ .NameLower }}Service I{{ .Name }}Service
+	{{ .NameLower }}Service service.{{ .Name }}
 	transform   transform.{{ .Name }}
 	logger      *logger.CustomLogger
 }
 
-func New{{ .Name }}({{ .NameLower }}Service I{{ .Name }}Service, logger *logger.CustomLogger) {{ .Name }} {
+func New{{ .Name }}({{ .NameLower }}Service service.{{ .Name }}, logger *logger.CustomLogger) {{ .Name }} {
 	return {{ .Name }}{
 		{{ .NameLower }}Service: {{ .NameLower }}Service,
 		transform: transform.New{{ .Name }}(logger),
 		logger:    logger,
 	}
-}
-
-type I{{ .Name }}Service interface {
-	Ping()
 }
 
 func (ctl *{{ .Name }}) Ping(c *gin.Context) {}
