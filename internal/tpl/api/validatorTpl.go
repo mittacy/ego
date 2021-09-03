@@ -2,6 +2,7 @@ package api
 
 import (
 	"bytes"
+	"github.com/mittacy/ego/internal/utils"
 	"html/template"
 	"strings"
 )
@@ -37,8 +38,8 @@ type Validator struct {
 }
 
 func (s *Validator) execute() ([]byte, error) {
-	s.NameLower = strings.ToLower(s.Name)
-	s.Name = strings.Title(s.NameLower)
+	s.Name = utils.StringFirstUpper(s.Name)
+	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 

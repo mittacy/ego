@@ -2,8 +2,8 @@ package api
 
 import (
 	"bytes"
+	"github.com/mittacy/ego/internal/utils"
 	"html/template"
-	"strings"
 )
 
 var apiTemplate = `
@@ -42,8 +42,8 @@ type Api struct {
 }
 
 func (s *Api) execute() ([]byte, error) {
-	s.NameLower = strings.ToLower(s.Name)
-	s.Name = strings.Title(s.NameLower)
+	s.Name = utils.StringFirstUpper(s.Name)
+	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 

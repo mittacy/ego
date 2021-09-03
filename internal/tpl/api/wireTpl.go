@@ -2,8 +2,8 @@ package api
 
 import (
 	"bytes"
+	"github.com/mittacy/ego/internal/utils"
 	"html/template"
-	"strings"
 )
 
 var wireTemplate = `
@@ -35,13 +35,13 @@ func NewWire(appName, name string) wire {
 		Name:    name,
 	}
 
-	w.Name = strings.Title(strings.ToLower(w.Name))
+	w.Name = utils.StringFirstUpper(w.Name)
 	return w
 }
 
 func (s *wire) execute() ([]byte, error) {
-	s.NameLower = strings.ToLower(s.Name)
-	s.Name = strings.Title(s.NameLower)
+	s.Name = utils.StringFirstUpper(s.Name)
+	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 
@@ -57,8 +57,8 @@ func (s *wire) execute() ([]byte, error) {
 }
 
 func (s *wire) executeVar() ([]byte, error) {
-	s.NameLower = strings.ToLower(s.Name)
-	s.Name = strings.Title(s.NameLower)
+	s.Name = utils.StringFirstUpper(s.Name)
+	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 
@@ -74,8 +74,8 @@ func (s *wire) executeVar() ([]byte, error) {
 }
 
 func (s *wire) executeVarInit() ([]byte, error) {
-	s.NameLower = strings.ToLower(s.Name)
-	s.Name = strings.Title(s.NameLower)
+	s.Name = utils.StringFirstUpper(s.Name)
+	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 
