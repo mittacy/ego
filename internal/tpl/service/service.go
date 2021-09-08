@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/mittacy/ego/internal/base"
 	"github.com/mittacy/ego/internal/tpl/data"
+	"github.com/mittacy/ego/internal/tpl/model"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
@@ -43,6 +44,8 @@ func run(cmd *cobra.Command, args []string) {
 	AddService(modName, args[0])
 
 	data.AddData(modName, args[0])
+
+	model.AddModel(args[0])
 
 	fmt.Println("success!")
 }
