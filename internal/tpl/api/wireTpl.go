@@ -7,11 +7,11 @@ import (
 )
 
 var wireTemplate = `
-func Init{{ .Name }}Api(db *gorm.DB, cache *redis.Pool) api.{{ .Name }} {
-	customLogger := logger.NewCustomLogger("{{ .NameLower }}")
-	{{ .NameLower }}Data := data.New{{ .Name }}(db, cache, customLogger)
-	{{ .NameLower }}Service := service.New{{ .Name }}({{ .NameLower }}Data, customLogger)
-	return api.New{{ .Name }}({{ .NameLower }}Service, customLogger)
+func Init{{ .Name }}Api(db *gorm.DB, redis *cache.Redis) api.{{ .Name }} {
+	l := log.New("{{ .NameLower }}")
+	{{ .NameLower }}Data := data.New{{ .Name }}(db, redis, l)
+	{{ .NameLower }}Service := service.New{{ .Name }}({{ .NameLower }}Data, l)
+	return api.New{{ .Name }}({{ .NameLower }}Service, l)
 }
 `
 
@@ -20,7 +20,7 @@ var wireVarTemplate = `
 `
 
 var wireVarInitTemplate = `
-  {{ .NameLower }}Api = Init{{ .Name }}Api(db.ConnectGorm("MYSQLKEY"), cache.ConnRedis("REDISKEY"))
+  {{ .NameLower }}Api = Init{{ .Name }}Api(db.ConnectGorm("MYSQLKEY"), cache.NewRedis("REDISKEY", "{{ .NameLower }}"))
 `
 
 type wire struct {

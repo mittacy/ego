@@ -13,17 +13,17 @@ package api
 import (
 	"{{ .AppName }}/app/service"
 	"{{ .AppName }}/app/transform"
-	"{{ .AppName }}/pkg/logger"
+	"{{ .AppName }}/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
 type {{ .Name }} struct {
 	{{ .NameLower }}Service service.{{ .Name }}
 	transform   transform.{{ .Name }}
-	logger      *logger.CustomLogger
+	logger      *log.Logger
 }
 
-func New{{ .Name }}({{ .NameLower }}Service service.{{ .Name }}, logger *logger.CustomLogger) {{ .Name }} {
+func New{{ .Name }}({{ .NameLower }}Service service.{{ .Name }}, logger *log.Logger) {{ .Name }} {
 	return {{ .Name }}{
 		{{ .NameLower }}Service: {{ .NameLower }}Service,
 		transform: transform.New{{ .Name }}(logger),
@@ -31,7 +31,9 @@ func New{{ .Name }}({{ .NameLower }}Service service.{{ .Name }}, logger *logger.
 	}
 }
 
-func (ctl *{{ .Name }}) Ping(c *gin.Context) {}
+func (ctl *{{ .Name }}) Ping(c *gin.Context) {
+	c.JSON(200, "success")
+}
 
 `
 

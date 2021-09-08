@@ -13,18 +13,18 @@ package transform
 import (
 	"{{ .AppName }}/app/model"
 	"{{ .AppName }}/app/validator/{{ .NameLower }}Validator"
-	"{{ .AppName }}/pkg/logger"
+	"{{ .AppName }}/pkg/log"
 	"{{ .AppName }}/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 )
 
 type {{ .Name }} struct {
-	logger *logger.CustomLogger
+	logger *log.Logger
 }
 
-func New{{ .Name }}(customLogger *logger.CustomLogger) {{ .Name }} {
-	return {{ .Name }}{logger: customLogger}
+func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
+	return {{ .Name }}{logger: logger}
 }
 
 // {{ .Name }}Pack 数据库数据转化为响应数据

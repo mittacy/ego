@@ -10,9 +10,8 @@ var dataTemplate = `
 package data
 
 import (
-	"github.com/gomodule/redigo/redis"
 	"{{ .AppName }}/app/service"
-	"{{ .AppName }}/pkg/logger"
+	"{{ .AppName }}/pkg/log"
 	"{{ .AppName }}/pkg/store/cache"
 	"gorm.io/gorm"
 )
@@ -21,16 +20,14 @@ import (
 
 type {{ .Name }} struct {
 	db 	   *gorm.DB
-	cache  cache.CustomRedis
-	logger *logger.CustomLogger
+	redis  *cache.Redis
+	logger *log.Logger
 }
 
-func New{{ .Name }}(db *gorm.DB, cacheConn *redis.Pool, logger *logger.CustomLogger) service.I{{ .Name }}Data {
-	r := cache.ConnRedisByPool(cacheConn, "{{ .NameLower }}")
-
+func New{{ .Name }}(db *gorm.DB, redis *cache.Redis, logger *log.Logger) service.I{{ .Name }}Data {
 	return &{{ .Name }}{
 		db:    	db,
-		cache: 	r,
+		redis: 	redis,
 		logger: logger,
 	}
 }

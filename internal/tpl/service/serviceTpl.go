@@ -11,15 +11,15 @@ var serviceTemplate = `
 package service
 
 import (
-	"{{ .AppName }}/pkg/logger"
+	"{{ .AppName }}/pkg/log"
 )
 
 type {{ .Name }} struct {
 	{{ .NameLower }}Data I{{ .Name }}Data
-	logger *logger.CustomLogger
+	logger *log.Logger
 }
 
-func New{{ .Name }}({{ .NameLower }}Data I{{ .Name }}Data, logger *logger.CustomLogger) {{ .Name }} {
+func New{{ .Name }}({{ .NameLower }}Data I{{ .Name }}Data, logger *log.Logger) {{ .Name }} {
 	return {{ .Name }}{
 		{{ .NameLower }}Data: {{ .NameLower }}Data,
 		logger: logger,
