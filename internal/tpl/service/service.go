@@ -21,7 +21,7 @@ var CmdService = &cobra.Command{
 var targetDir string
 
 func init() {
-	CmdService.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
+	CmdService.Flags().StringVarP(&targetDir, "target-dir", "t", "internal", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {

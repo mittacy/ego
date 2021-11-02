@@ -11,27 +11,28 @@ var apiTemplate = `
 package api
 
 import (
-	"{{ .AppName }}/app/service"
-	"{{ .AppName }}/app/transform"
+	"{{ .AppName }}/internal/service"
+	"{{ .AppName }}/internal/transform"
 	"{{ .AppName }}/pkg/log"
 	"github.com/gin-gonic/gin"
 )
 
-type {{ .Name }} struct {
-	{{ .NameLower }}Service service.{{ .Name }}
+type {{ .Name }}Api struct {
+	service 	service.{{ .Name }}
 	transform   transform.{{ .Name }}
 	logger      *log.Logger
 }
 
-func New{{ .Name }}({{ .NameLower }}Service service.{{ .Name }}, logger *log.Logger) {{ .Name }} {
-	return {{ .Name }}{
-		{{ .NameLower }}Service: {{ .NameLower }}Service,
-		transform: transform.New{{ .Name }}(logger),
-		logger:    logger,
+func New{{ .Name }}() {{ .Name }}Api {
+	l := log.New("{{ .NameLower }}")
+	return {{ .Name }}Api{
+		logger:    l,
+		service: service.New{{ .Name }}(l),
+		transform: transform.New{{ .Name }}(l),
 	}
 }
 
-func (ctl *{{ .Name }}) Ping(c *gin.Context) {
+func (ctl *{{ .Name }}Api) Ping(c *gin.Context) {
 	c.JSON(200, "success")
 }
 

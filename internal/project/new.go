@@ -63,8 +63,8 @@ func (p *Project) New(ctx context.Context, dir string, layout string, branch str
 
 	fmt.Println(color.WhiteString("$ cd %s", p.Name))
 	fmt.Println(color.WhiteString("$ go mod download "))
-	fmt.Println(color.WhiteString("edit the default.yaml "))
-	fmt.Println(color.WhiteString("$ go run main.go -config ./default.yaml\n", p.Name))
+	fmt.Println(color.WhiteString("edit the .env.* configuration file"))
+	fmt.Println(color.WhiteString("$ go run main.go -env debug -port 8080 -config .env.development\n", p.Name))
 	fmt.Println("		🤝 Thanks for using ego")
 	fmt.Println("	📚 Tutorial: https://app.gitbook.com/@mittacychen/s/ego/")
 	return nil

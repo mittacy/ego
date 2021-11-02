@@ -10,9 +10,10 @@ var dataTemplate = `
 package data
 
 import (
-	"{{ .AppName }}/app/service"
+	"{{ .AppName }}/pkg/cache"
 	"{{ .AppName }}/pkg/log"
-	"{{ .AppName }}/pkg/store/cache"
+	"{{ .AppName }}/pkg/mysql"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
@@ -20,14 +21,14 @@ import (
 
 type {{ .Name }} struct {
 	db 	   *gorm.DB
-	redis  *cache.Redis
+	cache  *redis.Client
 	logger *log.Logger
 }
 
-func New{{ .Name }}(db *gorm.DB, redis *cache.Redis, logger *log.Logger) service.I{{ .Name }}Data {
-	return &{{ .Name }}{
-		db:    	db,
-		redis: 	redis,
+func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
+	return {{ .Name }}{
+		db:    	mysql.NewClientByName("localhost"),
+		cache: 	cache.NewClientByName("localhost", 0),
 		logger: logger,
 	}
 }

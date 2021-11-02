@@ -11,23 +11,20 @@ var serviceTemplate = `
 package service
 
 import (
+	"{{ .AppName }}/internal/data"
 	"{{ .AppName }}/pkg/log"
 )
 
 type {{ .Name }} struct {
-	{{ .NameLower }}Data I{{ .Name }}Data
+	data data.{{ .Name }}
 	logger *log.Logger
 }
 
-func New{{ .Name }}({{ .NameLower }}Data I{{ .Name }}Data, logger *log.Logger) {{ .Name }} {
+func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
 	return {{ .Name }}{
-		{{ .NameLower }}Data: {{ .NameLower }}Data,
+		data: data.New{{ .Name }}(logger),
 		logger: logger,
 	}
-}
-
-type I{{ .Name }}Data interface {
-	PingData()
 }
 
 func (ctl *{{ .Name }}) Ping() {}

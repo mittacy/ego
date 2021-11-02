@@ -20,12 +20,16 @@ var CmdApi = &cobra.Command{
 	Long:  "Generate the api template implementations. Example: ego tpl api xxx",
 	Run:   run,
 }
-var targetDir string
-var wireDir string
+var (
+	targetDir   string
+	internalDir string
+	wireDir     string
+)
 
 func init() {
 	//CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
 	targetDir = "app"
+	internalDir = "internal"
 	wireDir = "router"
 }
 
@@ -38,6 +42,12 @@ func run(cmd *cobra.Command, args []string) {
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
 		fmt.Printf("Target directory: %s does not exist.\n"+
 			"Please make sure you operate in the go project root directory\n", targetDir)
+		return
+	}
+
+	if _, err := os.Stat(internalDir); os.IsNotExist(err) {
+		fmt.Printf("Target directory: %s does not exist.\n"+
+			"Please make sure you operate in the go project root directory\n", internalDir)
 		return
 	}
 
@@ -61,7 +71,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	data.AddData(modName, name)
 
-	AddWire(modName, name)
+	//AddWire(modName, name)
 
 	fmt.Println("success!")
 }
@@ -88,7 +98,7 @@ func AddApi(appName, name string) bool {
 }
 
 func AddValidator(name string) bool {
-	dir := fmt.Sprintf("%s/validator/%sValidator", targetDir, name)
+	dir := fmt.Sprintf("%s/validator/%sValidator", internalDir, name)
 	validator := Validator{Name: name}
 
 	// 检查目录
@@ -120,7 +130,7 @@ func AddValidator(name string) bool {
 }
 
 func AddTransform(appName, name string) bool {
-	to := fmt.Sprintf("%s/transform/%s.go", targetDir, name)
+	to := fmt.Sprintf("%s/transform/%s.go", internalDir, name)
 	transform := Transform{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
