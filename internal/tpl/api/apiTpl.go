@@ -17,22 +17,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type {{ .Name }}Api struct {
+type {{ .Name }} struct {
 	service 	service.{{ .Name }}
 	transform   transform.{{ .Name }}
 	logger      *log.Logger
 }
 
-func New{{ .Name }}() {{ .Name }}Api {
+func New{{ .Name }}() {{ .Name }} {
 	l := log.New("{{ .NameLower }}")
-	return {{ .Name }}Api{
+	return {{ .Name }}{
 		logger:    l,
 		service: service.New{{ .Name }}(l),
 		transform: transform.New{{ .Name }}(l),
 	}
 }
 
-func (ctl *{{ .Name }}Api) Ping(c *gin.Context) {
+func (ctl *{{ .Name }}) Ping(c *gin.Context) {
 	c.JSON(200, "success")
 }
 
