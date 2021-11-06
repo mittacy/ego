@@ -17,8 +17,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// 实现service层中的data接口
-
 type {{ .Name }} struct {
 	db 	   *gorm.DB
 	cache  *redis.Client
