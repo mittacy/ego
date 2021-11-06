@@ -15,7 +15,7 @@ import (
 var CmdService = &cobra.Command{
 	Use:   "service",
 	Short: "Generate the service template implementations",
-	Long:  "Generate the service template implementations. Example: ego tpl service xxx -t=app",
+	Long:  "Generate the service template implementations. Example: ego tpl service xxx -t=internal",
 	Run:   run,
 }
 var targetDir string

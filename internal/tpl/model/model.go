@@ -12,7 +12,7 @@ import (
 var CmdModel = &cobra.Command{
 	Use:   "model",
 	Short: "Generate the model template implementations",
-	Long:  "Generate the model template implementations. Example: ego tpl model xxx -t=app",
+	Long:  "Generate the model template implementations. Example: ego tpl model xxx -t=internal",
 	Run:   run,
 }
 var targetDir string

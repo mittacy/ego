@@ -14,7 +14,7 @@ import (
 var CmdData = &cobra.Command{
 	Use:   "data",
 	Short: "Generate the data template implementations",
-	Long:  "Generate the data template implementations. Example: ego tpl data xxx -t=app",
+	Long:  "Generate the data template implementations. Example: ego tpl data xxx -t=internal",
 	Run:   run,
 }
 var targetDir string
