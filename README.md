@@ -92,5 +92,8 @@ $ ego tpl service article
 
 # 创建 data、model 代码结构
 $ ego tpl data article
+
+# 创建定时任务task 代码模板
+$ ego tpl task notice
 ```
 

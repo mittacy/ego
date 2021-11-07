@@ -5,6 +5,7 @@ import (
 	"github.com/mittacy/ego/internal/tpl/data"
 	"github.com/mittacy/ego/internal/tpl/model"
 	"github.com/mittacy/ego/internal/tpl/service"
+	"github.com/mittacy/ego/internal/tpl/task"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +22,7 @@ func init() {
 	CmdTpl.AddCommand(service.CmdService)
 	CmdTpl.AddCommand(data.CmdData)
 	CmdTpl.AddCommand(model.CmdModel)
+	CmdTpl.AddCommand(task.CmdTask)
 }
 
 func run(cmd *cobra.Command, args []string) {
