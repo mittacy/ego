@@ -32,7 +32,7 @@ func (t *{{ .Name }}) Spec() string {
 }
 
 func (t *{{ .Name }}) Job() cron.Job {
-	return &{{ .Name }}{}
+	return t
 }
 
 func (t *{{ .Name }}) Run() {
