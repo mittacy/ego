@@ -42,12 +42,13 @@ func (t *{{ .Name }}) Run() {
 
 `
 
-type Model struct {
+type Task struct {
+	AppName   string
 	Name      string
 	NameLower string
 }
 
-func (s *Model) execute() ([]byte, error) {
+func (s *Task) execute() ([]byte, error) {
 	s.Name = utils.StringFirstUpper(s.Name)
 	s.NameLower = utils.StringFirstLower(s.Name)
 

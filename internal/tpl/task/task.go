@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"github.com/mittacy/ego/internal/base"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
@@ -32,14 +33,23 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	AddTask(args[0])
+	modName, err := base.ModulePath("go.mod")
+	if modName == "" || err != nil {
+		fmt.Printf("go.mod no exist.\nPlease make sure you operate in the go project root directory\n")
+		return
+	}
+
+	AddTask(modName, args[0])
 
 	fmt.Println("success!")
 }
 
-func AddTask(name string) bool {
+func AddTask(appName, name string) bool {
 	to := fmt.Sprintf("%s/task/%s.go", targetDir, name)
-	model := Model{Name: name}
+	model := Task{
+		AppName: appName,
+		Name:    name,
+	}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, "%s task already exists: %s\n", name, to)
