@@ -10,24 +10,28 @@ var dataTemplate = `
 package data
 
 import (
+	"fmt"
 	"{{ .AppName }}/pkg/cache"
 	"{{ .AppName }}/pkg/log"
 	"{{ .AppName }}/pkg/mysql"
 	"github.com/go-redis/redis/v8"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
 type {{ .Name }} struct {
 	db 	   *gorm.DB
 	cache  *redis.Client
+	cacheKeyPre string
 	logger *log.Logger
 }
 
 func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
 	return {{ .Name }}{
+		logger: logger,
 		db:    	mysql.NewClientByName("localhost"),
 		cache: 	cache.NewClientByName("localhost", 0),
-		logger: logger,
+		cacheKeyPre: fmt.Sprintf("%s:{{ .NameLower }}", viper.GetString("APP_NAME")),
 	}
 }
 
