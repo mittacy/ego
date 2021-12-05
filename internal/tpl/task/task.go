@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/mittacy/ego/internal/base"
 	"github.com/spf13/cobra"
 	"io/ioutil"
@@ -39,9 +40,11 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	AddTask(modName, args[0])
+	name := args[0]
 
-	fmt.Println("success!")
+	AddTask(modName, name)
+
+	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the app/task/init.go", name))
 }
 
 func AddTask(appName, name string) bool {
