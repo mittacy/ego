@@ -6,6 +6,7 @@ import (
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/fatih/color"
 	"github.com/mittacy/ego/internal/base"
+	"github.com/mittacy/ego/internal/utils"
 	"os"
 	"path"
 )
@@ -58,6 +59,11 @@ func (p *Project) New(ctx context.Context, dir string, layout string, branch str
 
 	// 替换项目中的字符串
 	base.Replace(to, replaceStr, p.Name)
+
+	// 复制配置文件
+	developEnv := fmt.Sprintf("%s/.env.development", to)
+	localEnv := fmt.Sprintf("%s/.env", to)
+	_ = utils.Copy(localEnv, developEnv)
 
 	fmt.Print("💻 Use the following command to start the project 👇:\n\n")
 
