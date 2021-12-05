@@ -3,6 +3,7 @@ package tpl
 import (
 	"github.com/mittacy/ego/internal/tpl/api"
 	"github.com/mittacy/ego/internal/tpl/data"
+	"github.com/mittacy/ego/internal/tpl/job"
 	"github.com/mittacy/ego/internal/tpl/model"
 	"github.com/mittacy/ego/internal/tpl/service"
 	"github.com/mittacy/ego/internal/tpl/task"
@@ -23,6 +24,7 @@ func init() {
 	CmdTpl.AddCommand(data.CmdData)
 	CmdTpl.AddCommand(model.CmdModel)
 	CmdTpl.AddCommand(task.CmdTask)
+	CmdTpl.AddCommand(job.CmdJob)
 }
 
 func run(cmd *cobra.Command, args []string) {
