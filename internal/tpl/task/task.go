@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"github.com/mittacy/ego/internal/base"
+	"github.com/mittacy/ego/internal/utils"
 	"github.com/spf13/cobra"
 	"io/ioutil"
 	"log"
@@ -44,7 +45,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddTask(modName, name)
 
-	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the app/task/init.go", name))
+	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the app/task/init.go", utils.StringFirstUpper(name)))
 }
 
 func AddTask(appName, name string) bool {
