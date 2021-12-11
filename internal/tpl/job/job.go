@@ -21,7 +21,7 @@ var CmdJob = &cobra.Command{
 var targetDir string
 
 func init() {
-	CmdJob.Flags().StringVarP(&targetDir, "target-dir", "t", "internal", "generate target directory")
+	CmdJob.Flags().StringVarP(&targetDir, "target-dir", "t", "interface", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -58,7 +58,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddProcessor(modName, name)
 
-	fmt.Println(color.WhiteString("Don't forget to add the %sJob.NewProcessor() to the app/job/job.go", name))
+	fmt.Println(color.WhiteString("Don't forget to add the %sJob.NewProcessor() to the cmd/job/main.go Jobs()", name))
 }
 
 func AddTask(appName, name string) bool {

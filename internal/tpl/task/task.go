@@ -21,7 +21,7 @@ var CmdTask = &cobra.Command{
 var targetDir string
 
 func init() {
-	CmdTask.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
+	CmdTask.Flags().StringVarP(&targetDir, "target-dir", "t", "interface", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -45,7 +45,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddTask(modName, name)
 
-	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the app/task/init.go", utils.StringFirstUpper(name)))
+	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the %s/task/init.go", utils.StringFirstUpper(name), targetDir))
 }
 
 func AddTask(appName, name string) bool {

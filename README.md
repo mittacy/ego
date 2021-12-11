@@ -51,25 +51,31 @@ $ ego new helloworld
 │       ├── log.go
 │       ├── response.go
 │       └── validator.go
-├── app							# 对外服务
-│   ├── adminApi				# 高级权限路由
+├── cmd							# 服务
+│   ├── api						# API监听服务
+│   │   └── main.go
+│   └── job						# 流式任务处理服务
+│       └── main.go
+├── interface				    # 对外服务
+│   ├── api						# API控制器
 │   │   └── user.go
-│   ├── api						# 普通权限路由
-│   │   └── user.go
-│   ├── job						# 流式任务处理
+│   ├── job						# 流式任务
+│   │   └── exampleJob
+│   │       ├── processor.go	# 任务处理器
+│   │       └── task.go			# 生成任务
 │   └── task					# 定时任务
 ├── internal					# 内部服务
 │   └── validator				# 数据请求、响应结构体定义以及参数校验
-│       └── userValidator
-│           └── user.go
+│   │   └── userValidator
+│   │       └── user.go
 │   ├── transform				# 响应数据处理、封装
-│       └── user.go
+│   │   └── user.go
 │   ├── service					# 服务层，处理逻辑
-│       └── user.go
+│   │   └── user.go
 │   ├── data					# 数据查询、存储层
-│       └── user.go
-│   ├── model					# 定义与数据库的映射结构体
-│       └── user.go
+│   │   └── user.go
+│   └── model					# 定义与数据库的映射结构体
+│       └── user.go
 ├── middleware              	# 中间件
 └── router						# 路由
 │   ├── admin.go
@@ -84,16 +90,19 @@ $ ego new helloworld
 **tpl命令需要在项目根目录运行**
 
 ```shell
-# 创建 api、validator、transform、service、data、model 代码结构
+# 创建 api、validator、transform、service、data、model 代码模板
 $ ego tpl api article
 
-# 创建 service、data、model 代码结构
+# 创建 service、data、model 代码模板
 $ ego tpl service article
 
-# 创建 data、model 代码结构
+# 创建 data、model 代码模板
 $ ego tpl data article
 
-# 创建定时任务task 代码模板
+# 创建定时任务 task 代码模板
 $ ego tpl task notice
+
+# 创建异步任务 job 代码模板
+$ ego tpl job sendEmail
 ```
 

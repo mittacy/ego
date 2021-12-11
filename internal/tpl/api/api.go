@@ -28,7 +28,7 @@ var (
 
 func init() {
 	//CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
-	targetDir = "app"
+	targetDir = "interface"
 	internalDir = "internal"
 	wireDir = "router"
 }
@@ -194,7 +194,6 @@ func AddWire(appName, name string) bool {
 	}
 
 	// 声明api
-
 
 	// 初始化api
 
