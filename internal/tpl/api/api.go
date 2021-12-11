@@ -10,7 +10,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 )
 
 // CmdApi the api command.
@@ -23,14 +22,12 @@ var CmdApi = &cobra.Command{
 var (
 	targetDir   string
 	internalDir string
-	wireDir     string
 )
 
 func init() {
 	//CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
 	targetDir = "interface"
 	internalDir = "internal"
-	wireDir = "router"
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -70,8 +67,6 @@ func run(cmd *cobra.Command, args []string) {
 	service.AddService(modName, name)
 
 	data.AddData(modName, name)
-
-	//AddWire(modName, name)
 
 	fmt.Println("success!")
 }
@@ -147,56 +142,5 @@ func AddTransform(appName, name string) bool {
 	}
 
 	fmt.Printf("create file %s\n", to)
-	return true
-}
-
-func AddWire(appName, name string) bool {
-	dir := wireDir
-
-	// 检查目录
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		fmt.Printf("Target directory: %s does not exist.\n"+
-			"Please make sure you operate in the go project root directory\n", dir)
-		return false
-	}
-
-	wirePath := fmt.Sprintf("%s/api.go", dir)
-	wire := NewWire(appName, name)
-
-	// 检查是否已经包含函数
-	b, err := ioutil.ReadFile(wirePath)
-	if err != nil {
-		fmt.Printf("Target wire: %s does not exist.\n", wirePath)
-		return false
-	}
-
-	if strings.Contains(string(b), fmt.Sprintf("Init%sApi", wire.Name)) {
-		fmt.Printf("function Init%sApi already exists in %s\n", wire.Name, wirePath)
-		return false
-	}
-
-	// 打开 api.go 文件
-	file, err := os.OpenFile(wirePath, os.O_WRONLY|os.O_APPEND, 0600)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s no exists\n", dir)
-		return false
-	}
-	defer file.Close()
-
-	// 追加函数
-	b, err = wire.execute()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if _, err = file.Write(b); err != nil {
-		fmt.Printf("create function Init%sApi err: %v\n", wire.Name, err)
-	}
-
-	// 声明api
-
-	// 初始化api
-
-	fmt.Printf("create function Init%sApi in %s\n", wire.Name, wirePath)
 	return true
 }

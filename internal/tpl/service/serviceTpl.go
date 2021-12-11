@@ -11,23 +11,24 @@ var serviceTemplate = `
 package service
 
 import (
-	"{{ .AppName }}/internal/data"
 	"{{ .AppName }}/pkg/log"
 )
 
-type {{ .Name }} struct {
-	data data.{{ .Name }}
-	logger *log.Logger
-}
+var {{ .Name }} {{ .NameLower }}Service
 
-func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
-	return {{ .Name }}{
-		data: data.New{{ .Name }}(logger),
-		logger: logger,
+func init() {
+	l := log.New("{{ .NameLower }}")
+
+	{{ .Name }} = {{ .NameLower }}Service{
+		logger: l,
 	}
 }
 
-func (ctl *{{ .Name }}) Ping() {}
+type {{ .NameLower }}Service struct {
+	logger *log.Logger
+}
+
+func (ctl *{{ .NameLower }}Service) Ping() {}
 
 `
 

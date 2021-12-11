@@ -11,31 +11,35 @@ package data
 
 import (
 	"fmt"
-	"{{ .AppName }}/pkg/cache"
-	"{{ .AppName }}/pkg/log"
-	"{{ .AppName }}/pkg/mysql"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
+	"{{ .AppName }}/pkg/cache"
+	"{{ .AppName }}/pkg/log"
+	"{{ .AppName }}/pkg/mysql"
 )
 
-type {{ .Name }} struct {
-	db 	   *gorm.DB
-	cache  *redis.Client
-	cacheKeyPre string
-	logger *log.Logger
-}
+var {{ .Name }} {{ .NameLower }}Data
 
-func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
-	return {{ .Name }}{
-		logger: logger,
-		db:    	mysql.NewClientByName("localhost"),
-		cache: 	cache.NewClientByName("localhost", 0),
+func init() {
+	l := log.New("{{ .NameLower }}")
+
+	{{ .Name }} = {{ .NameLower }}Data{
+		db:          mysql.NewClientByName("localhost"),
+		cache:       cache.NewClientByName("localhost", 0),
 		cacheKeyPre: fmt.Sprintf("%s:{{ .NameLower }}", viper.GetString("APP_NAME")),
+		logger:      l,
 	}
 }
 
-func (ctl *{{ .Name }}) PingData() {}
+type {{ .NameLower }}Data struct {
+	db          *gorm.DB
+	cache       *redis.Client
+	cacheKeyPre string
+	logger      *log.Logger
+}
+
+func (ctl *{{ .NameLower }}Data) PingData() {}
 
 `
 

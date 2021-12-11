@@ -19,17 +19,23 @@ import (
 	"{{ .AppName }}/pkg/response"
 )
 
-type {{ .Name }} struct {
+var {{ .Name }} {{ .NameLower }}Transform
+
+type {{ .NameLower }}Transform struct {
 	logger *log.Logger
 }
 
-func New{{ .Name }}(logger *log.Logger) {{ .Name }} {
-	return {{ .Name }}{logger: logger}
+func init() {
+	l := log.New("{{ .NameLower }}")
+
+	{{ .Name }} = {{ .NameLower }}Transform{
+		logger: l,
+	}
 }
 
 // Get{{ .Name }}Reply 详情响应
 // @param data 数据库数据
-func (ctl *{{ .Name }}) Get{{ .Name }}Reply(c *gin.Context, req interface{}, data *model.{{ .Name }}) {
+func (ctl *{{ .NameLower }}Transform) Get{{ .Name }}Reply(c *gin.Context, req interface{}, data *model.{{ .Name }}) {
 	reply{{ .Name }} := {{ .NameLower }}Validator.GetReply{}
 
 	if err := copier.Copy(&reply{{ .Name }}, data); err != nil {
