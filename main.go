@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-const version = "v1.4.2"
+const version = "v1.4.3"
 
 var rootCmd = &cobra.Command{
 	Use:     "ego",

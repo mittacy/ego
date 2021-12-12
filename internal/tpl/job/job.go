@@ -45,10 +45,18 @@ func run(cmd *cobra.Command, args []string) {
 	name := args[0]
 
 	// 检查目录
-	dir := fmt.Sprintf("%s/job/%sJob", targetDir, name)
+	dir := fmt.Sprintf("%s/job/%sJob/%sJobProcessor", targetDir, name, name)
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		// 创建目录
-		if err := os.Mkdir(dir, 0711); err != nil {
+		if err := os.MkdirAll(dir, 0711); err != nil {
+			fmt.Fprintf(os.Stderr, "create %sJob directory err: %s\n", name, dir)
+			return
+		}
+	}
+	dir = fmt.Sprintf("%s/job/%sJob/%sJobTask", targetDir, name, name)
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		// 创建目录
+		if err := os.MkdirAll(dir, 0711); err != nil {
 			fmt.Fprintf(os.Stderr, "create %sJob directory err: %s\n", name, dir)
 			return
 		}
@@ -62,7 +70,7 @@ func run(cmd *cobra.Command, args []string) {
 }
 
 func AddTask(appName, name string) bool {
-	to := fmt.Sprintf("%s/job/%sJob/task.go", targetDir, name)
+	to := fmt.Sprintf("%s/job/%sJob/%sJobTask/task.go", targetDir, name, name)
 	api := Task{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
@@ -83,7 +91,7 @@ func AddTask(appName, name string) bool {
 }
 
 func AddProcessor(appName, name string) bool {
-	to := fmt.Sprintf("%s/job/%sJob/processor.go", targetDir, name)
+	to := fmt.Sprintf("%s/job/%sJob/%sJobProcessor/processor.go", targetDir, name, name)
 	api := Processor{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {

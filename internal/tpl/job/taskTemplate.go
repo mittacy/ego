@@ -8,7 +8,7 @@ import (
 
 var taskTemplate = `
 {{- /* delete empty line */ -}}
-package {{ .NameLower }}Job
+package {{ .NameLower }}JobTask
 
 import (
 	"encoding/json"
