@@ -15,6 +15,8 @@ import (
 	"{{ .AppName }}/pkg/log"
 )
 
+// 一般情况下service应该只引用并控制自己的data模型，需要其他服务的功能请service.Xxx调用服务而不是引入其他data模型
+// {{ .Name }} 服务说明注释
 var {{ .Name }} {{ .NameLower }}Service
 
 func init() {
@@ -34,7 +36,6 @@ type {{ .NameLower }}Service struct {
 func (ctl *{{ .NameLower }}Service) Ping() bool {
 	return ctl.data.Ping()
 }
-
 `
 
 type Service struct {

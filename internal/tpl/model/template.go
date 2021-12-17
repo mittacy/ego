@@ -18,6 +18,11 @@ func (*{{ .Name }}) TableName() string {
 	return "{{ .NameLower }}"
 }
 
+const (
+	// 状态
+	{{ .Name }}StateDeleted = 100	// 删除
+)
+
 `
 
 type Model struct {

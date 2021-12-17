@@ -38,6 +38,10 @@ func New{{ .Name }}(l *log.Logger) {{ .Name }} {
 func (ctl *{{ .Name }}) Ping() bool {
 	return true
 }
+
+/*
+ * 以下为查询缓存KEY方法
+ */
 `
 
 type Data struct {
