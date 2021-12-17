@@ -19,12 +19,15 @@ import (
 	"{{ .AppName }}/pkg/mysql"
 )
 
-var {{ .Name }} {{ .NameLower }}Data
+type {{ .Name }} struct {
+	db          *gorm.DB
+	cache       *redis.Client
+	cacheKeyPre string
+	logger      *log.Logger
+}
 
-func init() {
-	l := log.New("{{ .NameLower }}")
-
-	{{ .Name }} = {{ .NameLower }}Data{
+func New{{ .Name }}(l *log.Logger) {{ .Name }} {
+	return {{ .Name }}{
 		db:          mysql.NewClientByName("localhost"),
 		cache:       cache.NewClientByName("localhost", 0),
 		cacheKeyPre: fmt.Sprintf("%s:{{ .NameLower }}", viper.GetString("APP_NAME")),
@@ -32,15 +35,9 @@ func init() {
 	}
 }
 
-type {{ .NameLower }}Data struct {
-	db          *gorm.DB
-	cache       *redis.Client
-	cacheKeyPre string
-	logger      *log.Logger
+func (ctl *{{ .Name }}) Ping() bool {
+	return true
 }
-
-func (ctl *{{ .NameLower }}Data) PingData() {}
-
 `
 
 type Data struct {

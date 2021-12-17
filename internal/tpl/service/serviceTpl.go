@@ -11,6 +11,7 @@ var serviceTemplate = `
 package service
 
 import (
+	"{{ .AppName }}/internal/data"
 	"{{ .AppName }}/pkg/log"
 )
 
@@ -21,14 +22,18 @@ func init() {
 
 	{{ .Name }} = {{ .NameLower }}Service{
 		logger: l,
+		data: 	data.New{{ .Name }}(l),
 	}
 }
 
 type {{ .NameLower }}Service struct {
 	logger *log.Logger
+	data   data.{{ .Name }}
 }
 
-func (ctl *{{ .NameLower }}Service) Ping() {}
+func (ctl *{{ .NameLower }}Service) Ping() bool {
+	return ctl.data.Ping()
+}
 
 `
 
