@@ -53,7 +53,7 @@ func GetRedis(name string, defaultDB int) *redis.Client {
 	}
 
 	redisPool[cacheName] = db
-	return nil
+	return db
 }
 
 // NewClient 获取新客户端
@@ -98,7 +98,7 @@ func NewRedisConnect(conf Conf, db int) (*redis.Client, error) {
 // var user = User{Redis{RedisConfName: "localhost", RedisDB:0}}
 //
 // func (u *User) GetUser(id int64) error {
-// 	 u.Redis().Set()
+// 	 u.GoRedis().Set(k, v)
 // }
 type Redis struct {
 	RedisConfName string
@@ -107,7 +107,7 @@ type Redis struct {
 
 // Redis 获取redis连接
 // @return *redis.Client
-func (ctl *Redis) Redis() *redis.Client {
+func (ctl *Redis) GoRedis() *redis.Client {
 	return GetRedis(ctl.RedisConfName, ctl.RedisDB)
 }
 
