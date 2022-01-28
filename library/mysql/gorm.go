@@ -5,13 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mittacy/log"
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"moul.io/zapgorm2"
-	"time"
 )
 
 var ErrNoInit = errors.New("gorm: please initialize with InitGorm() method")
@@ -34,22 +32,24 @@ var (
 //			Password: viper.GetString("DB_CORE_RW_PASSWORD"),
 //		},
 //	}
-func InitGorm(connectConf map[string]Conf) {
+// @param options gorm配置
+// WithLogName 配置日志名
+// WithLogSlowThreshold 配置慢日志阈值
+// WithLogIgnoreRecordNotFound 配置是否忽略记录未找到错误
+func InitGorm(connectConf map[string]Conf, options ...GormConfigOption) {
 	// 初始化mysql连接配置
 	InitMysqlConf(connectConf)
 
-	// 初始化单例池、日志
+	// 初始化单例池
 	gormPool = make(map[string]*gorm.DB, 0)
-	l := log.New("gorm")
-	gormLog = zapgorm2.New(l.GetZap())
 
-	if viper.GetDuration("GORM_SLOW_LOG_THRESHOLD") == 0 {
-		gormLog.SlowThreshold = time.Millisecond * 100
-	} else {
-		gormLog.SlowThreshold = viper.GetDuration("GORM_SLOW_LOG_THRESHOLD") * time.Millisecond
-	}
+	// 初始化日志
+	gc := newGormConf(options...)
+	l := log.New(gc.LogName)
+	gormLog = zapgorm2.New(l.GetZap())
+	gormLog.SlowThreshold = gc.LogSlowThreshold
 	gormLog.LogLevel = logger.Info
-	gormLog.IgnoreRecordNotFoundError = true
+	gormLog.IgnoreRecordNotFoundError = gc.LogIgnoreRecordNotFound
 	gormLog.SetAsDefault()
 
 	isInit = true
