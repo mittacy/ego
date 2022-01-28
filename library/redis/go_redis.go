@@ -17,7 +17,10 @@ var (
 	redisLog *log.Logger               // redis日志
 )
 
-func InitRedis() {
+func InitRedis(connectConf map[string]Conf) {
+	// 初始化redis连接配置池
+	InitRedisConf(connectConf)
+
 	// 初始化单例池
 	redisPool = make(map[string]*redis.Client, 0)
 
