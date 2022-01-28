@@ -105,23 +105,23 @@ func NewGormConnect(conf Conf) (*gorm.DB, error) {
 	return db, nil
 }
 
-// Gorm 在结构体引入组合并赋值dbConf，即可获取gorm连接
+// Gorm 在结构体引入组合并赋值ConfName，即可通过DB()获取gorm连接
 // Example
 // type User struct {
 // 	 Gorm
 // }
 //
-// var user = User{Gorm{dbConf: "localhost"}}
+// var user = User{Gorm{ConfName: "localhost"}}
 //
 // func (u *User) GetUser(id int64) error {
 // 	 u.DB().Where("id = ?", id).First()
 // }
 type Gorm struct {
-	dbConf string
+	ConfName string
 }
 
 // DB 获取DB连接
 // @return *gorm.DB
 func (ctl *Gorm) DB() *gorm.DB {
-	return GetGorm(ctl.dbConf)
+	return GetGorm(ctl.ConfName)
 }
