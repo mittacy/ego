@@ -117,11 +117,11 @@ func NewGormConnect(conf Conf) (*gorm.DB, error) {
 // 	 u.DB().Where("id = ?", id).First()
 // }
 type Gorm struct {
-	ConfName string
+	MysqlConfName string
 }
 
 // DB 获取DB连接
 // @return *gorm.DB
 func (ctl *Gorm) DB() *gorm.DB {
-	return GetGorm(ctl.ConfName)
+	return GetGorm(ctl.MysqlConfName)
 }
