@@ -6,15 +6,17 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/mittacy/log"
+	"sync"
 	"time"
 )
 
 var ErrNoInit = errors.New("redis: please initialize with InitRedis() method")
 
 var (
-	isInit   bool                     // 是否初始化
-	redisPool map[string]*redis.Client // 单例池
-	redisLog *log.Logger               // redis日志
+	isInit        bool                     // 是否初始化
+	redisPool     map[string]*redis.Client // 单例池
+	redisPoolLock sync.RWMutex             // 单例池锁
+	redisLog      *log.Logger              // redis日志
 )
 
 func InitRedis(connectConf map[string]Conf) {
@@ -23,6 +25,7 @@ func InitRedis(connectConf map[string]Conf) {
 
 	// 初始化单例池
 	redisPool = make(map[string]*redis.Client, 0)
+	redisPoolLock = sync.RWMutex{}
 
 	// 初始化日志
 	redisLog = log.New("redis")
@@ -35,10 +38,17 @@ func InitRedis(connectConf map[string]Conf) {
 // @param defaultDB 使用哪个数据库
 // @return *redis.Client
 func GetRedis(name string, defaultDB int) *redis.Client {
+	if !isInit {
+		panic(ErrNoInit)
+	}
+
 	cacheName := cachePoolName(name, defaultDB)
+
+	redisPoolLock.RLock()
 	if db, ok := redisPool[cacheName]; ok {
 		return db
 	}
+	redisPoolLock.RUnlock()
 
 	conf, isExist := connectConf[name]
 	if !isExist {
@@ -52,7 +62,10 @@ func GetRedis(name string, defaultDB int) *redis.Client {
 		return &redis.Client{}
 	}
 
+	redisPoolLock.Lock()
 	redisPool[cacheName] = db
+	redisPoolLock.Unlock()
+
 	return db
 }
 
@@ -100,14 +113,14 @@ func NewRedisConnect(conf Conf, db int) (*redis.Client, error) {
 // func (u *User) GetUser(id int64) error {
 // 	 u.GoRedis().Set(k, v)
 // }
-type Redis struct {
+type GoRedis struct {
 	RedisConfName string
-	RedisDB int
+	RedisDB       int
 }
 
 // Redis 获取redis连接
 // @return *redis.Client
-func (ctl *Redis) GoRedis() *redis.Client {
+func (ctl *GoRedis) Redis() *redis.Client {
 	return GetRedis(ctl.RedisConfName, ctl.RedisDB)
 }
 

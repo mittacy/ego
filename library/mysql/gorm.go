@@ -10,14 +10,16 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"moul.io/zapgorm2"
+	"sync"
 )
 
 var ErrNoInit = errors.New("gorm: please initialize with InitGorm() method")
 
 var (
-	isInit   bool                // 是否初始化
-	gormPool map[string]*gorm.DB // 单例池
-	gormLog  zapgorm2.Logger     // gorm慢日志
+	isInit       bool                // 是否初始化
+	gormPool     map[string]*gorm.DB // 单例池
+	gormPoolLock sync.RWMutex        // 单例池锁
+	gormLog      zapgorm2.Logger     // gorm慢日志
 )
 
 // InitGorm 函数功能说明
@@ -42,6 +44,7 @@ func InitGorm(connectConf map[string]Conf, options ...GormConfigOption) {
 
 	// 初始化单例池
 	gormPool = make(map[string]*gorm.DB, 0)
+	gormPoolLock = sync.RWMutex{}
 
 	// 初始化日志
 	gc := newGormConf(options...)
@@ -59,9 +62,15 @@ func InitGorm(connectConf map[string]Conf, options ...GormConfigOption) {
 // @param name 配置名
 // @return *gorm.DB
 func GetGorm(name string) *gorm.DB {
+	if !isInit {
+		panic(ErrNoInit)
+	}
+
+	gormPoolLock.RLock()
 	if db, ok := gormPool[name]; ok {
 		return db
 	}
+	gormPoolLock.RUnlock()
 
 	conf, isExist := connectConf[name]
 	if !isExist {
@@ -75,7 +84,9 @@ func GetGorm(name string) *gorm.DB {
 		return &gorm.DB{}
 	}
 
+	gormPoolLock.Lock()
 	gormPool[name] = db
+	gormPoolLock.Unlock()
 
 	return db
 }
