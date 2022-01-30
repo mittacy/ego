@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis/v8"
-	"github.com/mittacy/log"
+	"github.com/mittacy/ego/library/log"
 	"sync"
 	"time"
 )

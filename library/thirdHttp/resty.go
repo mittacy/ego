@@ -2,7 +2,7 @@ package thirdHttp
 
 import (
 	"github.com/go-resty/resty/v2"
-	"github.com/mittacy/log"
+	"github.com/mittacy/ego/library/log"
 	"github.com/pkg/errors"
 	"strings"
 	"time"
