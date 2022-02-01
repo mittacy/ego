@@ -8,6 +8,7 @@ require (
 	github.com/gin-gonic/gin v1.7.7 // indirect
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/go-resty/resty/v2 v2.7.0
+	github.com/hibiken/asynq v0.21.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.1
 	github.com/pkg/errors v0.8.1
 	github.com/spf13/cobra v1.2.1
