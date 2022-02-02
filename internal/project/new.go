@@ -70,7 +70,7 @@ func (p *Project) New(ctx context.Context, dir string, layout string, branch str
 	fmt.Println(color.WhiteString("$ cd %s", p.Name))
 	fmt.Println(color.WhiteString("$ go mod download "))
 	fmt.Println(color.WhiteString("edit the .env.* configuration file"))
-	fmt.Println(color.WhiteString("$ go build -o ./bin/server main.go"))
+	fmt.Println(color.WhiteString("$ go build -o ./bin/server ."))
 	fmt.Println(color.WhiteString("$ ./bin/server start http -c=.env.development -e=development -p=8080\n"))
 	fmt.Println("		🤝 Thanks for using ego")
 	fmt.Println("	📚 Tutorial: http://www.mittacy.com/column/1633512445750")
