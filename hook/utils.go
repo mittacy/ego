@@ -30,11 +30,8 @@ func AddGitCommitMsg() {
 	msgFileDir := hookDir + "/commit-msg"
 	if _, err := os.Stat(msgFileDir); os.IsNotExist(err) {
 		// 写入hooks/commit-msg
-		log.Println("commit-msg do it")
 		if err := ioutil.WriteFile(msgFileDir, []byte(commitMsg), 0755); err != nil {
 			log.Fatalf("写入%s commit-msg失败, err: %+v", msgFileDir, err)
 		}
-	} else {
-		log.Println("已存在")
 	}
 }
