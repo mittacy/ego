@@ -8,37 +8,37 @@ import (
 
 var processorTemplate = `
 {{- /* delete empty line */ -}}
-package {{ .NameLower }}JobProcess
+package job_process
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/hibiken/asynq"
-	"{{ .AppName }}/pkg/async"
-	"{{ .AppName }}/pkg/log"
-	"{{ .AppName }}/interface/job/{{ .NameLower }}Job/{{ .NameLower }}JobTask"
+	"github.com/mittacy/ego/library/log"
+	"{{ .AppName }}/app/job/job_payload"
 )
 
-func NewProcessor() *Processor {
-	return &Processor{
-		l: async.GetLogger(),
-	}
-}
-
-// Processor 任务处理器, 实现 asynq.Handler 接口
-type Processor struct {
+// Processor 任务处理器
+type {{ .Name }}Processor struct {
 	l *log.Logger
 }
 
-func (processor *Processor) ProcessTask(ctx context.Context, t *asynq.Task) error {
-	var p {{ .NameLower }}JobTask.Payload
+func New{{ .Name }}() *{{ .Name }}Processor {
+	return &{{ .Name }}Processor{
+		l: log.New("{{ .NameLower }}_job"),
+	}
+}
+
+func (processor *{{ .Name }}Processor) ProcessTask(ctx context.Context, t *asynq.Task) error {
+	var p job_payload.{{ .Name }}Payload
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return fmt.Errorf("json.Unmarshal failed: %v: %w", err, asynq.SkipRetry)
 	}
-	
-	// do work...
-	processor.l.Infof("数据: %+v", p)
+
+	// call service
+	// service.Biz.Do()
+	processor.l.Info("do something")
 
 	return nil
 }

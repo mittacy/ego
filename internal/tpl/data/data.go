@@ -14,13 +14,13 @@ import (
 var CmdData = &cobra.Command{
 	Use:   "data",
 	Short: "Generate the data template implementations",
-	Long:  "Generate the data template implementations. Example: ego tpl data xxx -t=internal",
+	Long:  "Generate the data template implementations. Example: ego tpl data xxx -t=app/internal",
 	Run:   run,
 }
 var targetDir string
 
 func init() {
-	CmdData.Flags().StringVarP(&targetDir, "target-dir", "t", "internal", "generate target directory")
+	CmdData.Flags().StringVarP(&targetDir, "target-dir", "t", "app/internal", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {

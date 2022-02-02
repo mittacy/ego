@@ -11,30 +11,23 @@ var serviceTemplate = `
 package service
 
 import (
-	"{{ .AppName }}/internal/data"
-	"{{ .AppName }}/pkg/log"
+	"github.com/gin-gonic/gin"
+	"{{ .AppName }}/app/internal/data"
+	"{{ .AppName }}/app/internal/model"
 )
 
 // 一般情况下service应该只引用并控制自己的data模型，需要其他服务的功能请service.Xxx调用服务而不是引入其他data模型
 // {{ .Name }} 服务说明注释
-var {{ .Name }} {{ .NameLower }}Service
-
-func init() {
-	l := log.New("{{ .NameLower }}")
-
-	{{ .Name }} = {{ .NameLower }}Service{
-		logger: l,
-		data: 	data.New{{ .Name }}(l),
-	}
+var {{ .Name }} = {{ .NameLower }}Service{
+	data: data.New{{ .Name }}(),
 }
 
 type {{ .NameLower }}Service struct {
-	logger *log.Logger
 	data   data.{{ .Name }}
 }
 
-func (ctl *{{ .NameLower }}Service) Ping() bool {
-	return ctl.data.Ping()
+func (ctl *{{ .NameLower }}Service) GetById(c *gin.Context, id int64) (model.{{ .Name }}, error) {
+	return ctl.data.GetById(c, id)
 }
 `
 

@@ -11,25 +11,12 @@ var validatorTemplate = `
 {{- /* delete empty line */ -}}
 package {{ .NameLower }}Validator
 
-type CreateReq struct {}
-type CreateReply struct{}
-
-type DeleteReq struct {}
-type DeleteReply struct{}
-
-type UpdateReq struct {
-	UpdateType int ${backquote}json:"update_type" binding:"required,oneof=1"${backquote}
+type GetReq struct {
+	Id int64 ${backquote}form:"id" json:"id" binding:"required,min=1"${backquote}
 }
-
-type UpdateInfoReq struct {}
-type UpdateInfoReply struct{}
-
-type GetReq struct {}
-type GetReply struct {}
-
-type ListReq struct {}
-type ListReply struct {}
-
+type GetReply struct {
+	Id int64 ${backquote}json:"id"${backquote}
+}
 `
 
 type Validator struct {

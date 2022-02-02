@@ -15,13 +15,13 @@ import (
 var CmdTask = &cobra.Command{
 	Use:   "task",
 	Short: "Generate the task template implementations",
-	Long:  "Generate the task template implementations. Example: ego tpl task xxx -t=app",
+	Long:  "Generate the task template implementations. Example: ego tpl task xxx -t=app/task",
 	Run:   run,
 }
 var targetDir string
 
 func init() {
-	CmdTask.Flags().StringVarP(&targetDir, "target-dir", "t", "interface", "generate target directory")
+	CmdTask.Flags().StringVarP(&targetDir, "target-dir", "t", "app/task", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -31,8 +31,9 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
-		fmt.Printf("Target directory: %s does not exist\n", targetDir)
-		return
+		if err := os.MkdirAll(targetDir, 0700); err != nil {
+			log.Printf("task: create %s directory err: %s\n", targetDir, err)
+		}
 	}
 
 	modName, err := base.ModulePath("go.mod")
@@ -45,11 +46,11 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddTask(modName, name)
 
-	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the %s/task/init.go", utils.StringFirstUpper(name), targetDir))
+	fmt.Println(color.WhiteString("Don't forget to add the New%s() to the config/task.go->Tasks()", utils.StringFirstUpper(name)))
 }
 
 func AddTask(appName, name string) bool {
-	to := fmt.Sprintf("%s/task/%s.go", targetDir, name)
+	to := fmt.Sprintf("%s/%s.go", targetDir, name)
 	model := Task{
 		AppName: appName,
 		Name:    name,

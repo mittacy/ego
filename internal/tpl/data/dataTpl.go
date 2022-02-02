@@ -7,36 +7,39 @@ import (
 )
 
 var dataTemplate = `
+{{- /* delete empty line */ -}}
 package data
 
 import (
 	"fmt"
-	"github.com/go-redis/redis/v8"
+	"github.com/gin-gonic/gin"
+	"github.com/mittacy/ego/library/mysql"
+	"github.com/mittacy/ego/library/redis"
 	"github.com/spf13/viper"
-	"gorm.io/gorm"
-	"{{ .AppName }}/pkg/cache"
-	"{{ .AppName }}/pkg/log"
-	"{{ .AppName }}/pkg/mysql"
+	"{{ .AppName }}/app/internal/model"
 )
 
 type {{ .Name }} struct {
-	db          *gorm.DB
-	cache       *redis.Client
+	mysql.Gorm
+	redis.GoRedis
 	cacheKeyPre string
-	logger      *log.Logger
 }
 
-func New{{ .Name }}(l *log.Logger) {{ .Name }} {
+func New{{ .Name }}() {{ .Name }} {
 	return {{ .Name }}{
-		db:          mysql.NewClientByName("localhost"),
-		cache:       cache.NewClientByName("localhost", 0),
+		Gorm: mysql.Gorm{
+			MysqlConfName: "localhost",
+		},
+		GoRedis: redis.GoRedis{
+			RedisConfName: "localhost",
+			RedisDB:       0,
+		},
 		cacheKeyPre: fmt.Sprintf("%s:{{ .NameLower }}", viper.GetString("APP_NAME")),
-		logger:      l,
 	}
 }
 
-func (ctl *{{ .Name }}) Ping() bool {
-	return true
+func (ctl *{{ .Name }}) GetById(c *gin.Context, id int64) (model.{{ .Name }}, error) {
+	return model.{{ .Name }}{Id: id}, nil
 }
 
 /*

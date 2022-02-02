@@ -1,42 +1,37 @@
-package model
+package job
 
 import (
 	"bytes"
 	"github.com/mittacy/ego/internal/utils"
-	"html/template"
+	"text/template"
 )
 
-var modelTemplate = `
+var taskTemplate = `
 {{- /* delete empty line */ -}}
-package model
+package job_payload
 
-const (
-	// 状态
-	{{ .Name }}StateDeleted = 100	// 删除
-)
+const {{ .Name }}TypeName = "{{ .NameLower }}:hello"
 
-type {{ .Name }} struct {
-	Id int64
-}
-
-func (*{{ .Name }}) TableName() string {
-	return "{{ .NameLower }}"
+// Payload 任务数据
+type {{ .Name }}Payload struct {
+	RequestId string
 }
 
 `
 
-type Model struct {
+type Task struct {
+	AppName   string
 	Name      string
 	NameLower string
 }
 
-func (s *Model) execute() ([]byte, error) {
+func (s *Task) execute() ([]byte, error) {
 	s.Name = utils.StringFirstUpper(s.Name)
 	s.NameLower = utils.StringFirstLower(s.Name)
 
 	buf := new(bytes.Buffer)
 
-	tmpl, err := template.New("model").Parse(modelTemplate)
+	tmpl, err := template.New("model").Parse(taskTemplate)
 	if err != nil {
 		return nil, err
 	}

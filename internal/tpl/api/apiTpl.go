@@ -12,25 +12,32 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"{{ .AppName }}/pkg/log"
+	"github.com/mittacy/ego/library/gin/response"
+	"github.com/mittacy/ego/library/log"
+	"{{ .AppName }}/apierr"
+	"{{ .AppName }}/app/internal/service"
+	"{{ .AppName }}/app/internal/transform"
+	"{{ .AppName }}/app/internal/validator/{{ .NameLower }}Validator"
 )
 
 var {{ .Name }} {{ .NameLower }}Api
 
-func init() {
-	l := log.New("{{ .NameLower }}")
+type {{ .NameLower }}Api struct {}
 
-	{{ .Name }} = {{ .NameLower }}Api{
-		logger: l,
+func (ctl *{{ .NameLower }}Api) Get(c *gin.Context) {
+	req := {{ .NameLower }}Validator.GetReq{}
+	if err := c.ShouldBindQuery(&req); err != nil {
+		response.ValidateErr(c, err)
+		return
 	}
-}
+	
+	{{ .NameLower }}, err := service.{{ .Name }}.GetById(c, req.Id)
+	if err != nil {
+		response.CheckErrAndLog(c, log.New("{{ .NameLower }}"), req, "get{{ .Name }}", err, apierr.ResourceNoExist)
+		return
+	}
 
-type {{ .NameLower }}Api struct {
-	logger *log.Logger
-}
-
-func (ctl *{{ .NameLower }}Api) Ping(c *gin.Context) {
-	c.JSON(200, "success")
+	transform.{{ .Name }}.GetReply(c, req, {{ .NameLower }})
 }
 
 `

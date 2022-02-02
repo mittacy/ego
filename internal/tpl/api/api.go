@@ -25,9 +25,8 @@ var (
 )
 
 func init() {
-	//CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
-	targetDir = "interface"
-	internalDir = "internal"
+	CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
+	CmdApi.Flags().StringVarP(&internalDir, "internal-dir", "i", "app/internal", "generate internal directory")
 }
 
 func run(cmd *cobra.Command, args []string) {

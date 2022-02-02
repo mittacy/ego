@@ -13,33 +13,23 @@ package transform
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"{{ .AppName }}/internal/model"
-	"{{ .AppName }}/internal/validator/{{ .NameLower }}Validator"
-	"{{ .AppName }}/pkg/log"
-	"{{ .AppName }}/pkg/response"
+	"github.com/mittacy/ego/library/gin/response"
+	"github.com/mittacy/ego/library/log"
+	"{{ .AppName }}/app/internal/model"
+	"{{ .AppName }}/app/internal/validator/{{ .NameLower }}Validator"
 )
 
 var {{ .Name }} {{ .NameLower }}Transform
 
-type {{ .NameLower }}Transform struct {
-	logger *log.Logger
-}
+type {{ .NameLower }}Transform struct {}
 
-func init() {
-	l := log.New("{{ .NameLower }}")
-
-	{{ .Name }} = {{ .NameLower }}Transform{
-		logger: l,
-	}
-}
-
-// Get{{ .Name }}Reply 详情响应
+// GetReply 详情响应
 // @param data 数据库数据
-func (ctl *{{ .NameLower }}Transform) Get{{ .Name }}Reply(c *gin.Context, req interface{}, data *model.{{ .Name }}) {
+func (ctl *{{ .NameLower }}Transform) GetReply(c *gin.Context, req interface{}, data model.{{ .Name }}) {
 	reply{{ .Name }} := {{ .NameLower }}Validator.GetReply{}
 
 	if err := copier.Copy(&reply{{ .Name }}, data); err != nil {
-		ctl.logger.CopierErrLog(err, req)
+		log.New("{{ .NameLower }}").ErrorwWithTrace(c, "copier转化失败", "req", req, "data", data, "err", err)
 		response.Unknown(c)
 		return
 	}

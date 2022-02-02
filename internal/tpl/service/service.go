@@ -15,13 +15,13 @@ import (
 var CmdService = &cobra.Command{
 	Use:   "service",
 	Short: "Generate the service template implementations",
-	Long:  "Generate the service template implementations. Example: ego tpl service xxx -t=internal",
+	Long:  "Generate the service template implementations. Example: ego tpl service xxx -t=app/internal",
 	Run:   run,
 }
 var targetDir string
 
 func init() {
-	CmdService.Flags().StringVarP(&targetDir, "target-dir", "t", "internal", "generate target directory")
+	CmdService.Flags().StringVarP(&targetDir, "target-dir", "t", "app/internal", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {

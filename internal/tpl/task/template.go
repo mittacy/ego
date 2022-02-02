@@ -11,7 +11,7 @@ var modelTemplate = `
 package task
 
 import (
-	"{{ .AppName }}/pkg/log"
+	"github.com/mittacy/ego/library/log"
 	"github.com/robfig/cron/v3"
 )
 
@@ -24,7 +24,7 @@ func New{{ .Name }}(logger *log.Logger) *{{ .Name }} {
 }
 
 func (t *{{ .Name }}) Name() string {
-	return "{{ .NameLower }}Task"
+	return "{{ .NameLower }}"
 }
 
 func (t *{{ .Name }}) Spec() string {
@@ -37,7 +37,7 @@ func (t *{{ .Name }}) Job() cron.Job {
 
 func (t *{{ .Name }}) Run() {
 	// do something
-	t.logger.Info("Hello, this is the {{ .NameLower }} task")
+	t.logger.Infow("Hello, this is the example task", "task", t.Name())
 }
 
 `

@@ -12,13 +12,13 @@ import (
 var CmdModel = &cobra.Command{
 	Use:   "model",
 	Short: "Generate the model template implementations",
-	Long:  "Generate the model template implementations. Example: ego tpl model xxx -t=internal",
+	Long:  "Generate the model template implementations. Example: ego tpl model xxx -t=app/internal",
 	Run:   run,
 }
 var targetDir string
 
 func init() {
-	CmdModel.Flags().StringVarP(&targetDir, "target-dir", "t", "internal", "generate target directory")
+	CmdModel.Flags().StringVarP(&targetDir, "target-dir", "t", "app/internal", "generate target directory")
 }
 
 func run(cmd *cobra.Command, args []string) {

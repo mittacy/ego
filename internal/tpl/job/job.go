@@ -18,22 +18,39 @@ var CmdJob = &cobra.Command{
 	Run:   run,
 }
 
-var targetDir string
+var (
+	targetDir  string
+	payloadDir string
+	processDir string
+)
 
 func init() {
-	CmdJob.Flags().StringVarP(&targetDir, "target-dir", "t", "interface", "generate target directory")
+	CmdJob.Flags().StringVarP(&targetDir, "target-dir", "t", "app/job", "generate target directory")
+	payloadDir = targetDir + "/job_payload"
+	processDir = targetDir + "/job_process"
 }
 
 func run(cmd *cobra.Command, args []string) {
 	if len(args) == 0 {
-		fmt.Fprintln(os.Stderr, "Please specify the api file. Example: ego tpl job xxx")
+		fmt.Fprintln(os.Stderr, "Please specify the job file. Example: ego tpl job xxx")
 		return
 	}
 
-	if _, err := os.Stat(targetDir); os.IsNotExist(err) {
-		fmt.Printf("Target directory: %s does not exist.\n"+
-			"Please make sure you operate in the go project root directory\n", targetDir)
-		return
+	// 检查目录
+	if _, err := os.Stat(payloadDir); os.IsNotExist(err) {
+		// 创建目录
+		if err := os.MkdirAll(payloadDir, 0700); err != nil {
+			fmt.Fprintf(os.Stderr, "create %s directory err: %v\n", payloadDir, err)
+			return
+		}
+	}
+
+	if _, err := os.Stat(processDir); os.IsNotExist(err) {
+		// 创建目录
+		if err := os.MkdirAll(processDir, 0700); err != nil {
+			fmt.Fprintf(os.Stderr, "create %s directory err: %v\n", processDir, err)
+			return
+		}
 	}
 
 	modName, err := base.ModulePath("go.mod")
@@ -41,40 +58,22 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf("go.mod no exist.\nPlease make sure you operate in the go project root directory\n")
 		return
 	}
-
 	name := args[0]
 
-	// 检查目录
-	dir := fmt.Sprintf("%s/job/%sJob/%sJobProcessor", targetDir, name, name)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		// 创建目录
-		if err := os.MkdirAll(dir, 0711); err != nil {
-			fmt.Fprintf(os.Stderr, "create %sJob directory err: %s\n", name, dir)
-			return
-		}
-	}
-	dir = fmt.Sprintf("%s/job/%sJob/%sJobTask", targetDir, name, name)
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		// 创建目录
-		if err := os.MkdirAll(dir, 0711); err != nil {
-			fmt.Fprintf(os.Stderr, "create %sJob directory err: %s\n", name, dir)
-			return
-		}
-	}
-
-	AddTask(modName, name)
+	AddPayload(modName, name)
 
 	AddProcessor(modName, name)
 
-	fmt.Println(color.WhiteString("Don't forget to add the %sJob.NewProcessor() to the cmd/job/main.go Jobs()", name))
+	fmt.Println(color.WhiteString("Don't forget to add the job_payload/TypeName and job_process/Process to the " +
+		"config/async_config/job.go->Jobs()"))
 }
 
-func AddTask(appName, name string) bool {
-	to := fmt.Sprintf("%s/job/%sJob/%sJobTask/task.go", targetDir, name, name)
+func AddPayload(appName, name string) bool {
+	to := fmt.Sprintf("%s/%s.go", payloadDir, name)
 	api := Task{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
-		fmt.Fprintf(os.Stderr, "%s job task already exists: %s\n", name, to)
+		fmt.Fprintf(os.Stderr, "%s job payload already exists: %s\n", name, to)
 		return false
 	}
 
@@ -91,7 +90,7 @@ func AddTask(appName, name string) bool {
 }
 
 func AddProcessor(appName, name string) bool {
-	to := fmt.Sprintf("%s/job/%sJob/%sJobProcessor/processor.go", targetDir, name, name)
+	to := fmt.Sprintf("%s/%s.go", processDir, name)
 	api := Processor{AppName: appName, Name: name}
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
