@@ -1,6 +1,7 @@
 package plugin
 
 import (
+	"github.com/mittacy/ego/internal/plugin/git"
 	"github.com/spf13/cobra"
 )
 
@@ -13,9 +14,8 @@ var CmdPlugin = &cobra.Command{
 }
 
 func init() {
-
+	CmdPlugin.AddCommand(git.CmdGit)
 }
 
 func run(cmd *cobra.Command, args []string) {
-
 }

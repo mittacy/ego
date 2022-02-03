@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mittacy/ego/internal/plugin"
 	"github.com/mittacy/ego/internal/project"
 	"github.com/mittacy/ego/internal/tpl"
 	"github.com/mittacy/ego/internal/upgrade"
@@ -21,6 +22,7 @@ func init() {
 	rootCmd.AddCommand(project.CmdNew)
 	rootCmd.AddCommand(tpl.CmdTpl)
 	rootCmd.AddCommand(upgrade.CmdUpgrade)
+	rootCmd.AddCommand(plugin.CmdPlugin)
 }
 
 func main() {

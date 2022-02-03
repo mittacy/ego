@@ -1,15 +1,16 @@
-package hook
+package variable
 
-const commitMsg = `#!/bin/sh
+// CommitMsg git commit annotation specification file context
+const CommitMsg = `#!/bin/sh
 
 # 目录 merge request
-MERGE_MSG=`+"`" +`cat $1 | egrep '^Merge branch*'`+"`" +`
+MERGE_MSG=` + "`" + `cat $1 | egrep '^Merge branch*'` + "`" + `
 
 if [ "$MERGE_MSG" != "" ]; then
 	exit 0
 fi
 
-COMMIT_MSG=`+"`" + `cat $1 | egrep "^(feat|fix|docs|style|refactor|test|chore)(\(\w+\))?:\s(\S|\w)+"` + "`" + `
+COMMIT_MSG=` + "`" + `cat $1 | egrep "^(feat|fix|docs|style|refactor|test|chore)(\(\w+\))?:\s(\S|\w)+"` + "`" + `
 
 if [ "$COMMIT_MSG" = "" ]; then
 	echo "INVALID COMMIT MSG: does not match "\<type>(\<scope\>): \<subject\>" !"
