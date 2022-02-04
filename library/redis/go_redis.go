@@ -46,6 +46,7 @@ func GetRedis(name string, defaultDB int) *redis.Client {
 
 	redisPoolLock.RLock()
 	if db, ok := redisPool[cacheName]; ok {
+		redisPoolLock.RUnlock()
 		return db
 	}
 	redisPoolLock.RUnlock()

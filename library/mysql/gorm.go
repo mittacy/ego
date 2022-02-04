@@ -68,6 +68,7 @@ func GetGorm(name string) *gorm.DB {
 
 	gormPoolLock.RLock()
 	if db, ok := gormPool[name]; ok {
+		gormPoolLock.RUnlock()
 		return db
 	}
 	gormPoolLock.RUnlock()
