@@ -1,4 +1,4 @@
-package mongo
+package go_mongo
 
 import (
 	"github.com/mittacy/ego/library/log"
