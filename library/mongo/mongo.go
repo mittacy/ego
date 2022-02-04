@@ -19,38 +19,40 @@ var (
 	mongoPoolLock sync.RWMutex             // 单例池锁
 )
 
-func Get(name string) *mongo.Client {
+func NewDatabase(name string) *mongo.Database {
 	if !isInit {
 		panic(ErrNoInit)
 	}
 
+	// 检查配置名
+	conf, ok := connectConf[name]
+	if !ok {
+		l.Errorf("mongo: 配置不存在, conf name: %s", name)
+		return &mongo.Database{}
+	}
+
+	// 获取client
 	mongoPoolLock.RLock()
 	if client, ok := mongoPool[name]; ok {
 		mongoPoolLock.RUnlock()
-		return client
+		return client.Database(conf.Database)
 	}
 	mongoPoolLock.RUnlock()
 
-	conf, isExist := connectConf[name]
-	if !isExist {
-		l.Errorf("mongo: 配置不存在, conf name: %s", name)
-		return &mongo.Client{}
-	}
-
-	db, err := NewConnect(conf)
+	client, err := NewClient(conf)
 	if err != nil {
 		l.Errorw("mongo: 连接失败", "conf", conf, "err", err)
-		return &mongo.Client{}
+		return &mongo.Database{}
 	}
 
 	mongoPoolLock.Lock()
-	mongoPool[name] = db
+	mongoPool[name] = client
 	mongoPoolLock.Unlock()
 
-	return db
+	return client.Database(conf.Database)
 }
 
-func NewConnect(conf Conf) (*mongo.Client, error) {
+func NewClient(conf Conf) (*mongo.Client, error) {
 	if !isInit {
 		panic(ErrNoInit)
 	}
@@ -84,6 +86,6 @@ type Mongo struct {
 	MongoConfName string
 }
 
-func (ctl *Mongo) DB() *mongo.Client {
-	return Get(ctl.MongoConfName)
+func (ctl *Mongo) GoMongo() *mongo.Database {
+	return NewDatabase(ctl.MongoConfName)
 }
