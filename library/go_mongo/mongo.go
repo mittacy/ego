@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mittacy/ego/library/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -18,6 +19,15 @@ var (
 	mongoPool     map[string]*mongo.Client // 单例池
 	mongoPoolLock sync.RWMutex             // 单例池锁
 )
+
+func Init(c map[string]Conf) {
+	l = log.New("mongo")
+	mongoPoolLock = sync.RWMutex{}
+	mongoPool = map[string]*mongo.Client{}
+	InitConnectConf(c)
+
+	isInit = true
+}
 
 func NewDatabase(name string) *mongo.Database {
 	if !isInit {

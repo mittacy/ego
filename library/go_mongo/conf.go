@@ -2,7 +2,6 @@ package go_mongo
 
 import (
 	"github.com/mittacy/ego/library/log"
-	"sync"
 )
 
 const (
@@ -37,8 +36,4 @@ var (
 // @param c
 func InitConnectConf(c map[string]Conf) {
 	connectConf = c
-	l = log.New("mongo")
-	mongoPoolLock = sync.RWMutex{}
-
-	isInit = true
 }
