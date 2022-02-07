@@ -6,14 +6,6 @@ import (
 	"net/http"
 )
 
-const (
-	SuccessCode      = 0   // 成功
-	FailCode         = 1   // 请求错误: 参数错误、……
-	UnauthorizedCode = 401 // 未认证
-	forbiddenCode    = 401 // 权限不足
-	unknownCode      = 500 // 未知错误
-)
-
 // Custom 自定义响应
 // httpCode http响应码
 // apiCode 业务响应码
