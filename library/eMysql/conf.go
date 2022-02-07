@@ -1,10 +1,10 @@
-package mysql
+package eMysql
 
 import "time"
 
 type gormConf struct {
-	LogName string
-	LogSlowThreshold time.Duration
+	LogName                 string
+	LogSlowThreshold        time.Duration
 	LogIgnoreRecordNotFound bool
 }
 

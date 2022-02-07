@@ -1,4 +1,4 @@
-package redis
+package eRedis
 
 import (
 	"context"
@@ -103,7 +103,7 @@ func NewRedisConnect(conf Conf, db int) (*redis.Client, error) {
 	return rdb, nil
 }
 
-// Redis 在结构体引入组合并赋值RedisConfName、RedisDB，即可通过Redis()获取redis连接
+// ERedis 在结构体引入组合并赋值RedisConfName、RedisDB，即可通过RDB()获取redis连接
 // Example
 // type User struct {
 // 	 Redis
@@ -114,14 +114,14 @@ func NewRedisConnect(conf Conf, db int) (*redis.Client, error) {
 // func (u *User) GetUser(id int64) error {
 // 	 u.GoRedis().Set(k, v)
 // }
-type GoRedis struct {
+type ERedis struct {
 	RedisConfName string
 	RedisDB       int
 }
 
-// Redis 获取redis连接
+// RDB 获取redis连接
 // @return *redis.Client
-func (ctl *GoRedis) Redis() *redis.Client {
+func (ctl *ERedis) RDB() *redis.Client {
 	return GetRedis(ctl.RedisConfName, ctl.RedisDB)
 }
 

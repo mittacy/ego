@@ -1,4 +1,4 @@
-package mysql
+package eMysql
 
 const (
 	dbDSNFormat = "%s:%s@tcp(%s:%d)/%s?parseTime=true&loc=Local"

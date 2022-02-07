@@ -1,4 +1,4 @@
-package mysql
+package eMysql
 
 import (
 	"context"
@@ -117,23 +117,23 @@ func NewGormConnect(conf Conf) (*gorm.DB, error) {
 	return db, nil
 }
 
-// Gorm 在结构体引入组合并赋值ConfName，即可通过DB()获取gorm连接
+// EGorm 在结构体引入组合并赋值ConfName，即可通过GDB()获取gorm连接
 // Example
 // type User struct {
-// 	 Gorm
+// 	 EGorm
 // }
 //
-// var user = User{Gorm{ConfName: "localhost"}}
+// var user = User{EGorm{ConfName: "localhost"}}
 //
 // func (u *User) GetUser(id int64) error {
-// 	 u.DB().Where("id = ?", id).First()
+// 	 u.GDB().Where("id = ?", id).First()
 // }
-type Gorm struct {
+type EGorm struct {
 	MysqlConfName string
 }
 
-// DB 获取DB连接
+// GDB 获取Gorm DB连接
 // @return *gorm.DB
-func (ctl *Gorm) DB() *gorm.DB {
+func (ctl *EGorm) GDB() *gorm.DB {
 	return GetGorm(ctl.MysqlConfName)
 }

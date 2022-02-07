@@ -1,4 +1,4 @@
-package go_mongo
+package eMongo
 
 import (
 	"github.com/mittacy/ego/library/log"
@@ -19,7 +19,7 @@ type Conf struct {
 
 var (
 	connectConf map[string]Conf // 连接配置池
-	l *log.Logger
+	l           *log.Logger
 )
 
 // InitConnectConf 初始化连接配置

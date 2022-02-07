@@ -1,4 +1,4 @@
-package go_mongo
+package eMongo
 
 import (
 	"context"
@@ -92,15 +92,15 @@ func NewClient(conf Conf) (*mongo.Client, error) {
 	return client, nil
 }
 
-type GoMongo struct {
+type EMongo struct {
 	MongoConfName string
 	CollationName string
 }
 
-func (ctl *GoMongo) MDB() *mongo.Database {
+func (ctl *EMongo) MDB() *mongo.Database {
 	return NewDatabase(ctl.MongoConfName)
 }
 
-func (ctl *GoMongo) MCollection(opts ...*options.CollectionOptions) *mongo.Collection {
+func (ctl *EMongo) MCollection(opts ...*options.CollectionOptions) *mongo.Collection {
 	return NewDatabase(ctl.MongoConfName).Collection(ctl.CollationName, opts...)
 }

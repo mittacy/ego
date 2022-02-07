@@ -27,67 +27,75 @@ $ ego new helloworld
 输出:
 
 ```shell
-├── bootstrap					# 初始化顺序调用封装
-│   └── init.go
-├── apierr						# 服务错误码和错误定义
-│   ├── code.go
-│   └── err.go
-├── pkg							# 各种外部工具封装
-│   ├── cache					# 缓存封装
-│   │   ├── config.go
-│   │   └── redis.go
-│   ├── config					# 配置全局初始化、配置结构
-│   │   └── viper.go
-│   ├── log						# 日志封装
-│   │   ├── biz.go
-│   │   ├── config.go
-│   │   ├── log.go
-│   │   ├── zap.go
-│   │   └── zap_test.go
-│   ├── mysql					# mysql封装
-│   │   ├── config.go
-│   │   └── gorm.go
-│   └── response				# 响应封装
-│       ├── log.go
-│       ├── response.go
-│       └── validator.go
-├── cmd							# 服务
-│   ├── api						# API监听服务
-│   │   └── main.go
-│   └── job						# 流式任务处理服务
-│       └── main.go
-├── interface				    # 对外服务
-│   ├── api						# API控制器
+├── bootstrap					# 服务依赖初始化
+│   ├── http.go					# http服务
+│   ├── job.go					# 异步任务服务
+│   ├── log.go
+│   ├── task.go					# 定时任务服务
+│   └── viper.go
+├── apierr						# 业务码定义
+│   └── code.go
+├── cmd
+│   └── start					
+│       ├── http				# http
+│       │   └── http.go
+│       ├── job					# 异步任务
+│       │   └── job.go
+│       └── task				# 定时任务
+│       │   └── task.go
+│		└── start.go			# 服务启动程序
+├── bin							# 可执行文件存储目录，不上传
+├── config						# 配置设置
+│   ├── async.go
+│   ├── async_config
+│   │   └── job.go
+│   ├── mysql.go
+│   ├── redis.go
+│   └── task.go
+├── middleware					# 中间件
+│   ├── requestLog.go
+│   └── requestTrace.go
+├── router						# 路由
+│   ├── admin.go
+│   └── router.go
+├── app
+│   ├── api						# api控制器
 │   │   └── user.go
-│   ├── job						# 流式任务
-│   │   └── exampleJob
-│   │       ├── processor.go	# 任务处理器
-│   │       └── task.go			# 生成任务
-│   └── task					# 定时任务
-├── internal					# 内部服务
-│   └── validator				# 数据请求、响应结构体定义以及参数校验
-│   │   └── userValidator
-│   │       └── user.go
-│   ├── transform				# 响应数据处理、封装
-│   │   └── user.go
-│   ├── service					# 服务层，处理逻辑
-│   │   └── user.go
-│   ├── data					# 数据查询、存储层
-│   │   └── user.go
-│   └── model					# 定义与数据库的映射结构体
-│       └── user.go
-├── middleware              	# 中间件
-└── router						# 路由
-│   ├── admin.go
-│   ├── request.go
-│   └── router.go
-├── Makefile
+│   ├── internal
+│   │   ├── data
+│   │   │   └── user.go
+│   │   ├── model
+│   │   │   └── user.go
+│   │   ├── service
+│   │   │   └── user.go
+│   │   ├── transform			# 响应数据处理、封装
+│   │   │   └── user.go
+│   │   └── validator			# 数据请求与参数校验、响应结构体
+│   │       └── userValidator
+│   │           └── user.go
+│   ├── job
+│   │   ├── job_payload			# 异步任务数据定义
+│   │   │   └── example.go
+│   │   └── job_process			# 异步任务处理器
+│   │       └── example.go
+│   └── task
+│       └── example.go
 ├── main.go
+├── hook.go						# 服务钩子定义
+├──.env							# 本地环境配置
+├──.env.development				# 开发环境配置
+├──.env.production				# 生产环境配置
 ```
 
-### 3. 生成业务模板
+### 3. 代码生成
 
-**tpl命令需要在项目根目录运行**
+#### 3.1 创建项目
+
+```shell
+$ ego new projectName
+```
+
+#### 3.2 模板生成
 
 ```shell
 # 创建 api、validator、transform、service、data、model 代码模板
@@ -104,5 +112,12 @@ $ ego tpl task notice
 
 # 创建异步任务 job 代码模板
 $ ego tpl job sendEmail
+```
+
+### 4. 插件
+
+```shell
+# 往项目注入git commit注释规范
+$ ego plugin git -t=./.git -t=commitLint
 ```
 
