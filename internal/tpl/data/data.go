@@ -17,10 +17,22 @@ var CmdData = &cobra.Command{
 	Long:  "Generate the data template implementations. Example: ego tpl data xxx -t=app/internal",
 	Run:   run,
 }
-var targetDir string
+
+const (
+	InjectMysql = "mysql"
+	InjectMongo = "mongo"
+	InjectRedis = "redis"
+	InjectHttp  = "http"
+)
+
+var (
+	targetDir      string
+	databaseHandle []string
+)
 
 func init() {
 	CmdData.Flags().StringVarP(&targetDir, "target-dir", "t", "app/internal", "generate target directory")
+	CmdData.Flags().StringArrayVarP(&databaseHandle, "database-handle", "d", []string{InjectMysql, InjectRedis}, "inject database handle:mysql,redis,mongo,http")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -40,20 +52,21 @@ func run(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	AddData(modName, args[0])
+	AddData(modName, args[0], databaseHandle)
 
 	model.AddModel(args[0])
 
 	fmt.Println("success!")
 }
 
-func AddData(appName, name string) bool {
+func AddData(appName, name string, databaseHandle []string) bool {
 	to := fmt.Sprintf("%s/data/%s.go", targetDir, name)
 
 	data := Data{
 		AppName: appName,
 		Name:    name,
 	}
+	data.parseInject(databaseHandle)
 
 	if _, err := os.Stat(to); !os.IsNotExist(err) {
 		fmt.Fprintf(os.Stderr, "%s data already exists: %s\n", name, to)

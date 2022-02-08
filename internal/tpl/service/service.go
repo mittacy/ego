@@ -18,10 +18,15 @@ var CmdService = &cobra.Command{
 	Long:  "Generate the service template implementations. Example: ego tpl service xxx -t=app/internal",
 	Run:   run,
 }
-var targetDir string
+
+var (
+	targetDir string
+	databaseHandle []string
+)
 
 func init() {
 	CmdService.Flags().StringVarP(&targetDir, "target-dir", "t", "app/internal", "generate target directory")
+	CmdService.Flags().StringArrayVarP(&databaseHandle, "database-handle", "d", []string{data.InjectMysql, data.InjectRedis}, "inject database handle:mysql,redis,mongo,http")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -43,7 +48,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	AddService(modName, args[0])
 
-	data.AddData(modName, args[0])
+	data.AddData(modName, args[0], databaseHandle)
 
 	model.AddModel(args[0])
 

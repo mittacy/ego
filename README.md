@@ -114,6 +114,16 @@ $ ego tpl task notice
 $ ego tpl job sendEmail
 ```
 
+data支持生成模板时注入不同的组件，默认注入EGorm、ERedis
+
+```shell
+$ ego tpl data article -d=mysql -d=redis -d=mongo -d=http
+
+$ ego tpl service article -d=mysql -d=redis -d=mongo -d=http
+
+$ ego tpl api article -d=mysql -d=redis -d=mongo -d=http
+```
+
 ### 4. 插件
 
 ```shell

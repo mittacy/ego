@@ -22,11 +22,13 @@ var CmdApi = &cobra.Command{
 var (
 	targetDir   string
 	internalDir string
+	databaseHandle []string
 )
 
 func init() {
 	CmdApi.Flags().StringVarP(&targetDir, "target-dir", "t", "app", "generate target directory")
 	CmdApi.Flags().StringVarP(&internalDir, "internal-dir", "i", "app/internal", "generate internal directory")
+	CmdApi.Flags().StringArrayVarP(&databaseHandle, "database-handle", "d", []string{data.InjectMysql, data.InjectRedis}, "inject database handle:mysql,redis,mongo,http")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -65,7 +67,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	service.AddService(modName, name)
 
-	data.AddData(modName, name)
+	data.AddData(modName, name, databaseHandle)
 
 	fmt.Println("success!")
 }
